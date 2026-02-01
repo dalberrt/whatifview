@@ -1,10 +1,6 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import { Button } from "@/components/ui/button"
-import { ChartLineLinear } from "@/components/ui/chart-line-linear"
-import { ChartLineMultiple } from "@/components/ui/chart-line-multiple"
-
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/home';
 import About from './pages/about';
