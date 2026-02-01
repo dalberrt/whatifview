@@ -2,6 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { Button } from "@/components/ui/button"
+import { ChartLineLinear } from "@/components/ui/chart-line-linear"
 import './App.css'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           count is {count}
         </button>
         <Button>Hi there!</Button>
+        <ChartLineLinear />
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
