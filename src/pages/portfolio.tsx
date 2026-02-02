@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { ChartLineLinear } from "@/components/ui/chart-line-linear"
 import { ChartLineMultiple } from "@/components/ui/chart-line-multiple"
+import { ChartLineInteractive } from "@/components/ui/chart-line-interactive"
 import fetchHistoricalData from "@/utils/historical"
 
 function Portfolio() {
@@ -17,7 +18,7 @@ function Portfolio() {
     }, [])
 
     return (
-        <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-8">
+        <main>
             <h1>Portfolio</h1>
             {loading ? (
                 <p>Loading...</p>
@@ -27,7 +28,7 @@ function Portfolio() {
                 </pre>
             )}
             <ChartLineLinear />
-            <ChartLineMultiple />
+            
         </main>
     )
 }

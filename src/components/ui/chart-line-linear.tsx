@@ -1,7 +1,9 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { TrendingUp } from "lucide-react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import fetchHistoricalData from "@/utils/historical"
 
 import {
   Card,
@@ -37,14 +39,24 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ChartLineLinear() {
+
+  const [data, setData] = useState<any>(null)
+
+  useEffect(() => {
+      fetchHistoricalData().then((json) => {
+          setData(json)
+      })
+  }, [])
+
+  console.log(data["chart"]["result"][0]["meta"]["symbol"])
   return (
-    <Card>
-      <CardHeader>
+    <Card className="mx-auto w-full md:w-[70vw] py-4 sm:py-0">
+      <CardHeader className="margin-top-1000px">
         <CardTitle>Line Chart - Linear</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
           <LineChart
             accessibilityLayer
             data={chartData}
