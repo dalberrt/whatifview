@@ -48,7 +48,7 @@ export function ChartLineLinear() {
       })
   }, [])
 
-  console.log(data["chart"]["result"][0]["meta"]["symbol"])
+  //console.log(data["chart"]["result"][0]["meta"]["symbol"])
   return (
     <Card className="mx-auto w-full md:w-[70vw] py-4 sm:py-0">
       <CardHeader className="margin-top-1000px">
