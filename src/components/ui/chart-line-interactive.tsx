@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 import fetchHistoricalData from "@/utils/historical"
 
 
@@ -31,7 +31,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartLineInteractive({data}) {
+export function ChartLineInteractive({data, ticker}) {
 
   const [activeChart] =
     React.useState<keyof typeof chartConfig>("desktop")
@@ -40,10 +40,13 @@ export function ChartLineInteractive({data}) {
     <Card className="mx-auto w-full md:w-[70vw] py-4 sm:py-0">
       <CardHeader className="flex flex-col items-stretch border-b p-[40px] sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>Line Chart - Interactive</CardTitle>
-          <CardDescription>
-            Showing total visitors for the last 3 months
+          <CardTitle>{ticker.toUpperCase()}</CardTitle>
+          {data &&
+            <CardDescription>
+            Showing value increase from {data[0]["date"]} to {data.at(-1)["date"]}
           </CardDescription>
+          }
+          
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">
@@ -60,6 +63,12 @@ export function ChartLineInteractive({data}) {
             }}
           >
             <CartesianGrid vertical={false} />
+            <YAxis 
+              tickLine={false} 
+              axisLine={false} 
+              tickMargin={8}
+              
+            />
             <XAxis
               dataKey="date"
               tickLine={false}

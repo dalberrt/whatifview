@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export function StockSearchForm({onSearch}) {
-    const [formData, setFormData] = useState({ ticker: "", start: "", end: "" });
+    const [formData, setFormData] = useState({ ticker: "", start: "", end: "", entry: "" });
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -9,7 +9,7 @@ export function StockSearchForm({onSearch}) {
         const p1 = Math.floor(new Date(formData.start).getTime() / 1000);
         const p2 = Math.floor(new Date(formData.end).getTime() / 1000);
 
-        onSearch(formData.ticker, p1, p2);
+        onSearch(formData.ticker, p1, p2, formData.entry);
     }
     return(
         <form onSubmit={handleSubmit}>
@@ -30,6 +30,12 @@ export function StockSearchForm({onSearch}) {
                 type="date"
                 value={formData.end}
                 onChange={(e) => setFormData({ ...formData, end: e.target.value})}
+            />
+            <label>Entry Amount: </label>
+            <input 
+                type="number"
+                value={formData.entry}
+                onChange={(e) => setFormData({ ...formData, entry: e.target.value})}
             />
             <button type="submit">Search</button>
         </form>

@@ -10,16 +10,18 @@ import fetchHistoricalData from "@/utils/historical"
 export default function Dashboard() {
   const [chartData, setChartData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [symbol, setSymbol] = useState("Pick a Stock!");
 
-  const handleSearch = async (ticker: string, p1: number, p2: number) => {
-    setLoading(true);
+  const handleSearch = async (ticker: string, p1: number, p2: number, entry: number) => {
+    setLoading(true)
     try {
-      const json = await fetchHistoricalData(ticker, p1, p2);
-      setChartData(json);
+      const json = await fetchHistoricalData(ticker, p1, p2, entry)
+      setChartData(json)
+      setSymbol(ticker)
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -27,7 +29,7 @@ export default function Dashboard() {
     <main>
       <StockSearchForm onSearch={handleSearch} />
       
-      {loading ? <p>Loading...</p> : <ChartLineInteractive data={chartData} />}
+      {loading ? <p>Loading...</p> : <ChartLineInteractive data={chartData} ticker={symbol} />}
     </main>
   );
 }
