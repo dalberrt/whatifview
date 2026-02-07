@@ -20,31 +20,26 @@ import {
 
 export const description = "An interactive line chart"
 
-const chartConfig = {
-  views: {
-    label: "Price Value",
-  },
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
+export function ChartLineInteractive({data, ticker}) {
+  const chartConfig = {
   car: {
     label: "Car",
     color: "var(--chart-3)",
   }
 } satisfies ChartConfig
-
-export function ChartLineInteractive({data, ticker}) {
-
+  for (let i = 0; i < ticker.length; i++ ) {
+    
+    if (ticker.length > 1) {
+      chartConfig[ticker[i]] = {
+        label: ticker[i],
+        color:  `var(--chart-${i+1})`
+      }
+    }
+    
+  }
+  
   const [activeChart] =
-    React.useState<keyof typeof chartConfig>("desktop")
-
-  const [activeChart2] =
-    React.useState<keyof typeof chartConfig>("mobile")
+    React.useState<keyof typeof chartConfig>(ticker)
 
   const [activeChart3] =
     React.useState<keyof typeof chartConfig>("car")
@@ -53,7 +48,7 @@ export function ChartLineInteractive({data, ticker}) {
     <Card className="mx-auto w-full md:w-[70vw] py-4 sm:py-0">
       <CardHeader className="flex flex-col items-stretch border-b p-[40px] sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>{ticker.toUpperCase()}</CardTitle>
+          <CardTitle>{ticker}</CardTitle>
           {data &&
             <CardDescription>
             Showing value increase from {data[0]["date"]} to {data.at(-1)["date"]}
@@ -112,20 +107,15 @@ export function ChartLineInteractive({data, ticker}) {
                 />
               }
             />
-            <Line
-              dataKey={activeChart}
+            {ticker.map((ticker, index) => 
+              <Line
+              dataKey={activeChart[index]}
               type="monotone"
-              stroke={`var(--color-${activeChart})`}
+              stroke={`var(--color-${activeChart[index]})`}
               strokeWidth={2}
               dot={false}
-            />
-            <Line
-              dataKey={activeChart2}
-              type="monotone"
-              stroke={`var(--color-${activeChart2})`}
-              strokeWidth={2}
-              dot={false}
-            />
+              />
+            )}
             <Line
               dataKey={activeChart3}
               type="monotone"

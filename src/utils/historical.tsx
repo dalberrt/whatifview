@@ -89,14 +89,31 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
         }
         let earliestTicker = dummyDataFill(tickers, tickerShares, tickerPrices, tickerDates)
 
-        const chartData = tickerDates[earliestTicker].map((date, index) => ({
+        /*const chartData = tickerDates[earliestTicker].map((date, index) => ({
             date: new Date(date * 1000).toISOString().split('T')[0],
-            desktop: tickerShares[tickers[0]][date] * tickerPrices[tickers[0]][date],             //value = shares * price
-            mobile: tickers[1] ? tickerShares[tickers[1]][date] * tickerPrices[tickers[1]][date] : null,  //if 2nd ticker exists, calculate its value oso
+            [tickers[0]]: tickerShares[tickers[0]][date] * tickerPrices[tickers[0]][date],             //value = shares * price
+            [tickers[1]]: tickers[1] ? tickerShares[tickers[1]][date] * tickerPrices[tickers[1]][date] : null,  //if 2nd ticker exists, calculate its value oso
             car: 1000 + index * 10  //dummy data for car,
-            }))
+            }))*/
+
+        const chartData = tickerDates[earliestTicker].map((date, index) => {
+            const entry = {
+                date: new Date(date * 1000).toISOString().split('T')[0],
+                [tickers[0]]: tickerShares[tickers[0]][date] * tickerPrices[tickers[0]][date], 
+                car: 1000 + index * 10  //dummy data for car,
+            };
+
+            if (tickers[1]) {
+                for (let i = 0; i < tickers.length; i++) {
+                    entry[tickers[i]] = tickerShares[tickers[i]][date] * tickerPrices[tickers[i]][date]
+                }
+                
+            }
+
+            return entry;
+            });
         
-        
+        console.log(chartData)
         return chartData
 
     } catch (err) {
