@@ -58,6 +58,10 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
                 tickerShares[t] = shares
                 tickerPrices[t] = prices
             }
+            console.log("tickerdates", tickerDates)
+            console.log("tickerprices", tickerPrices)
+            console.log("tickershares", tickerShares)
+
         }
         // console.log("Ticker Shares:", tickerShares)   //delete later
         // console.log("Ticker Prices:", tickerPrices)   //delete later
@@ -66,19 +70,11 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
         const chartData = tickerDates[tickers[0]].map((date, index) => ({
             date: new Date(date * 1000).toISOString().split('T')[0],
             desktop: tickerShares[tickers[0]][index] * tickerPrices[tickers[0]][index],
+            mobile: tickers[1] ? tickerShares[tickers[1]][index] * tickerPrices[tickers[1]][index] : null,
+            car: 1000 + index * 10  //dummy data for car,
             }))
-        /*
-        if (ticker2) {
-            const { dates: dates2, prices: prices2 } = await fetchAPIDatesPrices(ticker2, p1, p2)
-            let shares2 = sharesCalculator(prices2, entry, reinvest, dates2)
-            const init_price_mult2 = entry / prices2[0]
-            const chartData = dates.map((date, index) => ({
-                date: new Date(date * 1000).toISOString().split('T')[0],
-                desktop: shares[index] * prices[index],
-                mobile: shares2[index] * prices2[index]
-                }))
-            return chartData
-        }*/
+        
+        
         return chartData
 
     } catch (err) {

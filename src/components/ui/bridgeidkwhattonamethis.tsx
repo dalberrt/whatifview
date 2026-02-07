@@ -17,7 +17,7 @@ export default function Dashboard() {
     try {
       let tickers = [ticker1,ticker2]
       const json = await fetchHistoricalData(tickers, p1, p2, entry, reinvest)
-      console.log("Fetched Data:", json)    //delet later
+      // console.log("Fetched Data:", json)    //delet later
       setChartData(json)
       setSymbol(ticker1)
     } catch (error) {

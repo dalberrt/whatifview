@@ -32,6 +32,10 @@ const chartConfig = {
     label: "Mobile",
     color: "var(--chart-2)",
   },
+  car: {
+    label: "Car",
+    color: "var(--chart-3)",
+  }
 } satisfies ChartConfig
 
 export function ChartLineInteractive({data, ticker}) {
@@ -41,6 +45,9 @@ export function ChartLineInteractive({data, ticker}) {
 
   const [activeChart2] =
     React.useState<keyof typeof chartConfig>("mobile")
+
+  const [activeChart3] =
+    React.useState<keyof typeof chartConfig>("car")
 
   return (
     <Card className="mx-auto w-full md:w-[70vw] py-4 sm:py-0">
@@ -116,6 +123,13 @@ export function ChartLineInteractive({data, ticker}) {
               dataKey={activeChart2}
               type="monotone"
               stroke={`var(--color-${activeChart2})`}
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              dataKey={activeChart3}
+              type="monotone"
+              stroke={`var(--color-${activeChart3})`}
               strokeWidth={2}
               dot={false}
             />
