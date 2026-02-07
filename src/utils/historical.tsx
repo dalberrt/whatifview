@@ -13,7 +13,7 @@ function sharesCalculator(prices: number[], entry: number, reinvest: number, dat
             if (i % reinvest === 0) {
                 tempPrice = prices[i]       //price at that date
                 additionalShares = entry / tempPrice
-                console.log(" reinvest", reinvest, "price", tempPrice, "additionalShares", additionalShares)   //delete later
+                // console.log(" reinvest", reinvest, "price", tempPrice, "additionalShares", additionalShares)   //delete later
                 shares[i] = (shares[i - 1] || 0) + additionalShares
             } else {
                 shares[i] = shares[i - 1] || 0
@@ -27,7 +27,7 @@ function sharesCalculator(prices: number[], entry: number, reinvest: number, dat
         }
     }
     // console.log("reinvest", reinvest)   //delete later
-    console.log("Shares dict:", shares)   //delete later
+    // console.log("Shares dict:", shares)   //delete later
 
     return shares
 }
@@ -40,17 +40,34 @@ async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
     return { dates, prices }
 }
 
-async function fetchHistoricalData(ticker: string, p1: number, p2: number, entry: number, reinvest: number = 0, ticker2: string) {
+
+async function fetchHistoricalData(tickers: string[], p1: number, p2: number, entry: number, reinvest: number = 0) {
 
     try {
-        const { dates, prices } = await fetchAPIDatesPrices(ticker, p1, p2)
-        let shares = sharesCalculator(prices, entry, reinvest, dates)
+        let tickerDates: Record<string, number[]> = {}
+        let tickerPrices: Record<string, number[]> = {}
+        let tickerShares: Record<string, Record<number, number>> = {}
         
-        const chartData = dates.map((date, index) => ({
-            date: new Date(date * 1000).toISOString().split('T')[0],
-            desktop: shares[index] * prices[index],
-            }))
 
+        for (let t of tickers) {
+            if (t){
+                const { dates, prices } = await fetchAPIDatesPrices(t, p1, p2)
+                // console.log("ticker", t, "dates", dates) delet pls
+                let shares = sharesCalculator(prices, entry, reinvest, dates)
+                tickerDates[t] = dates
+                tickerShares[t] = shares
+                tickerPrices[t] = prices
+            }
+        }
+        // console.log("Ticker Shares:", tickerShares)   //delete later
+        // console.log("Ticker Prices:", tickerPrices)   //delete later
+        
+        // for now we use 1 ticker cause idk how use multiple to put into same chart
+        const chartData = tickerDates[tickers[0]].map((date, index) => ({
+            date: new Date(date * 1000).toISOString().split('T')[0],
+            desktop: tickerShares[tickers[0]][index] * tickerPrices[tickers[0]][index],
+            }))
+        /*
         if (ticker2) {
             const { dates: dates2, prices: prices2 } = await fetchAPIDatesPrices(ticker2, p1, p2)
             let shares2 = sharesCalculator(prices2, entry, reinvest, dates2)
@@ -61,8 +78,9 @@ async function fetchHistoricalData(ticker: string, p1: number, p2: number, entry
                 mobile: shares2[index] * prices2[index]
                 }))
             return chartData
-        }
+        }*/
         return chartData
+
     } catch (err) {
         console.error("Fetch error:", err)
         return null

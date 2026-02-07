@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Search } from "lucide-react" 
 
 export function StockSearchForm({onSearch}) {
-    const [formData, setFormData] = useState({ ticker: "", start: "", end: "", entry: "", reinvest: "", ticker2: ""});
+    const [formData, setFormData] = useState({ ticker1: "", ticker2: "", start: "", end: "", entry: "", reinvest: ""});
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -13,7 +13,7 @@ export function StockSearchForm({onSearch}) {
         const p1 = Math.floor(new Date(formData.start).getTime() / 1000);
         const p2 = Math.floor(new Date(formData.end).getTime() / 1000);
 
-        onSearch(formData.ticker, p1, p2, formData.entry, formData.reinvest, formData.ticker2);
+        onSearch(formData.ticker1, formData.ticker2, p1, p2, formData.entry, formData.reinvest);
     }
     return(
         
@@ -24,8 +24,8 @@ export function StockSearchForm({onSearch}) {
                     id="ticker"
                     placeholder="e.g. AAPL" 
                     className="bg-background"
-                    value={formData.ticker}
-                    onChange={(e) => setFormData({ ...formData, ticker: e.target.value.toUpperCase() })} 
+                    value={formData.ticker1}
+                    onChange={(e) => setFormData({ ...formData, ticker1: e.target.value.toUpperCase() })} 
                 />
             </div>
             <div className="flex flex-col gap-1.5 flex-1 min-w-[120px]">
