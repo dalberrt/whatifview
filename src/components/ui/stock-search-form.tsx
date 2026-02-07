@@ -13,7 +13,7 @@ export function StockSearchForm({onSearch}) {
         const p1 = Math.floor(new Date(formData.start).getTime() / 1000);
         const p2 = Math.floor(new Date(formData.end).getTime() / 1000);
 
-        onSearch(formData.ticker, p1, p2, formData.entry);
+        onSearch(formData.ticker, p1, p2, formData.entry, formData.reinvest);
     }
     return(
         
