@@ -12,11 +12,10 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [symbol, setSymbol] = useState("Pick a Stock!");
 
-  const handleSearch = async (ticker: string, p1: number, p2: number, entry: number, ticker2: string) => {
+  const handleSearch = async (ticker: string, p1: number, p2: number, entry: number, reinvest: number, ticker2: string) => {
     setLoading(true)
     try {
-      console.log("ticker2", ticker2)
-      const json = await fetchHistoricalData(ticker, p1, p2, entry, ticker2)
+      const json = await fetchHistoricalData(ticker, p1, p2, entry, reinvest, ticker2)
       console.log("Fetched Data:", json)    //delet later
       setChartData(json)
       setSymbol(ticker)
