@@ -3,7 +3,6 @@
 async function fetchHistoricalData(ticker: string, p1: number, p2: number, entry: number, reinvest: number = 0, ticker2: string) {
 
     try {
-        console.log(ticker2)
         if (ticker2) {
             const res2 = await fetch(`https://corsproxy.io/?https://query2.finance.yahoo.com/v8/finance/chart/${ticker2}?interval=1d&period1=${p1}&period2=${p2}`)
             const data2 = await res2.json()
@@ -46,8 +45,20 @@ async function fetchHistoricalData(ticker: string, p1: number, p2: number, entry
         const chartData = dates.map((date, index) => ({
             date: new Date(date * 1000).toISOString().split('T')[0],
             desktop: shares[index] * prices[index],
-            ...(ticker2 && {mobile: init_price_mult2 * prices2[index]})
             }))
+
+        if (ticker2) {
+            const res2 = await fetch(`https://corsproxy.io/?https://query2.finance.yahoo.com/v8/finance/chart/${ticker2}?interval=1d&period1=${p1}&period2=${p2}`)
+            const data2 = await res2.json()
+            const prices2 = data2["chart"]["result"][0]["indicators"]["adjclose"][0]["adjclose"]
+            const init_price_mult2 = entry / prices2[0]
+            const chartData = dates.map((date, index) => ({
+                date: new Date(date * 1000).toISOString().split('T')[0],
+                desktop: shares[index] * prices[index],
+                mobile: shares[index] * prices2[index]
+                }))
+            return chartData
+        }
         return chartData
     } catch (err) {
         console.error("Fetch error:", err)
