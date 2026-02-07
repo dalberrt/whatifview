@@ -11,6 +11,7 @@ async function fetchHistoricalData(ticker: string, p1: number, p2: number, entry
         let shares: Record<number, number> = {}   //dict to hold number of shares owned at each date index
 
         let tempPrice = prices[0]
+        let additionalShares = 0
         shares[0] = entry / tempPrice        //entry price divide by first stock price = get number of shares bought
         
         if (reinvest > 0) {
@@ -18,7 +19,8 @@ async function fetchHistoricalData(ticker: string, p1: number, p2: number, entry
                 // each reinvest interval, buy more shares with reinvest amount
                 if (i % reinvest === 0) {
                     tempPrice = prices[i]       //price at that date
-                    const additionalShares = reinvest / tempPrice
+                    additionalShares = entry / tempPrice
+                    console.log(" reinvest", reinvest, "price", tempPrice, "additionalShares", additionalShares)   //delete later
                     shares[i] = (shares[i - 1] || 0) + additionalShares
                 } else {
                     shares[i] = shares[i - 1] || 0
@@ -32,7 +34,7 @@ async function fetchHistoricalData(ticker: string, p1: number, p2: number, entry
             }
         }
         // console.log("reinvest", reinvest)   //delete later
-        // console.log("Shares dict:", shares)   //delete later
+        console.log("Shares dict:", shares)   //delete later
         
         const chartData = dates.map((date, index) => ({
             date: new Date(date * 1000).toISOString().split('T')[0],
