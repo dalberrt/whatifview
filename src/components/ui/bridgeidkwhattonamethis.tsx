@@ -16,6 +16,7 @@ export default function Dashboard() {
     setLoading(true)
     try {
       const json = await fetchHistoricalData(ticker, p1, p2, entry)
+      console.log("Fetched Data:", json)    //delet later
       setChartData(json)
       setSymbol(ticker)
     } catch (error) {

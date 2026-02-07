@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export function StockSearchForm({onSearch}) {
-    const [formData, setFormData] = useState({ ticker: "", start: "", end: "", entry: "" });
+    const [formData, setFormData] = useState({ ticker: "", start: "", end: "", entry: "", reinvest: ""});
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -36,6 +36,13 @@ export function StockSearchForm({onSearch}) {
                 type="number"
                 value={formData.entry}
                 onChange={(e) => setFormData({ ...formData, entry: e.target.value})}
+            />
+            <label>Re-Investment Interval (days): </label>
+            <input
+                type ="number"
+                placeholder = "Enter Re-Investment Interval (days)"
+                value = {formData.reinvest}
+                onChange = {(e) => setFormData({ ...formData, reinvest: e.target.value})}
             />
             <button type="submit">Search</button>
         </form>
