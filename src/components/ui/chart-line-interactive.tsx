@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
-import fetchHistoricalData from "@/utils/historical"
 
 
 import {
@@ -77,9 +76,10 @@ export function ChartLineInteractive({data, ticker}) {
               minTickGap={32}
               tickFormatter={(value) => {
                 const date = new Date(value)
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
+                return date.toLocaleDateString("en-GB", {
                   day: "numeric",
+                  month: "short",
+                  year: "numeric",
                 })
               }}
             />
@@ -89,7 +89,7 @@ export function ChartLineInteractive({data, ticker}) {
                   className="w-[150px]"
                   nameKey="views"
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+                    return new Date(value).toLocaleDateString("en-GB", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
