@@ -48,6 +48,7 @@ function dummyDataFill(tickers: string[], tickerShares: Record<string, Record<nu
         }
     }
     console.log(earliestTicker)
+    return earliestTicker
 }
 
 async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
@@ -86,9 +87,9 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
             //console.log("tickershares", tickerShares)
 
         }
-        //dummyDataFill(tickers, tickerShares, tickerPrices, tickerDates)
+        let earliestTicker = dummyDataFill(tickers, tickerShares, tickerPrices, tickerDates)
 
-        const chartData = tickerDates[tickers[0]].map((date, index) => ({
+        const chartData = tickerDates[earliestTicker].map((date, index) => ({
             date: new Date(date * 1000).toISOString().split('T')[0],
             desktop: tickerShares[tickers[0]][date] * tickerPrices[tickers[0]][date],             //value = shares * price
             mobile: tickers[1] ? tickerShares[tickers[1]][date] * tickerPrices[tickers[1]][date] : null,  //if 2nd ticker exists, calculate its value oso
