@@ -1,18 +1,18 @@
 // src/utils/historical.ts
 
-function sharesCalculator(prices: number[], entry: number, reinvest: number, dates: number[]) {
+function sharesCalculator(prices: number[], entry: number, reinvest_amount: number, reinvest_interval: number, dates: number[]) {
 
     let shares: Record<number, number> = {}
     let tempPrice = prices[0]
     let additionalShares = 0
     shares[dates[0]] = entry / tempPrice        // dictionary becomes --> date_string: shares_owned
     
-    if (reinvest > 0) {
+    if (reinvest_interval > 0) {
         for (let i = 1; i < dates.length; i++) {
             // each reinvest interval, buy more shares with reinvest amount
-            if (i % reinvest === 0) {
+            if (i % reinvest_interval === 0) {
                 tempPrice = prices[i]       //price at that date
-                additionalShares = entry / tempPrice
+                additionalShares = reinvest_amount / tempPrice
                 // console.log(" reinvest", reinvest, "price", tempPrice, "additionalShares", additionalShares)   //delete later
                 shares[dates[i]] = (shares[dates[i - 1]] || 0) + additionalShares
             } else {
@@ -61,7 +61,7 @@ async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
 }
 
 
-async function fetchHistoricalData(tickers: string[], p1: number, p2: number, entry: number, reinvest: number = 0) {
+async function fetchHistoricalData(tickers: string[], p1: number, p2: number, entry: number, reinvest_amount: number = 0, reinvest_interval: number = 0) {
 
     try {
         let tickerDates: Record<string, Record<number, number>> = {}
@@ -73,7 +73,7 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
             if (t){
                 const { dates, prices } = await fetchAPIDatesPrices(t, p1, p2)
 
-                let shares = sharesCalculator(prices, entry, reinvest, dates)
+                let shares = sharesCalculator(prices, entry, reinvest_amount, reinvest_interval, dates)
                 tickerDates[t] = dates
                 tickerShares[t] = shares
                 tickerPrices[t] = {}

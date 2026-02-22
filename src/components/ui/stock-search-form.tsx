@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Search } from "lucide-react" 
 
 export function StockSearchForm({onSearch}) {
-    const [formData, setFormData] = useState({ ticker1: "", ticker2: "", start: "", end: "", entry: "", reinvest: ""});
+    const [formData, setFormData] = useState({ ticker1: "", ticker2: "", start: "", end: "", entry: "", reinvest_amount: "", reinvest_interval: ""});
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -13,7 +13,7 @@ export function StockSearchForm({onSearch}) {
         const p1 = Math.floor(new Date(formData.start).getTime() / 1000);
         const p2 = Math.floor(new Date(formData.end).getTime() / 1000);
 
-        onSearch(formData.ticker1, formData.ticker2, p1, p2, formData.entry, formData.reinvest);
+        onSearch(formData.ticker1, formData.ticker2, p1, p2, formData.entry, formData.reinvest_amount, formData.reinvest_interval);
     }
     return(
         
@@ -69,6 +69,19 @@ export function StockSearchForm({onSearch}) {
                     onChange={(e) => setFormData({ ...formData, entry: e.target.value})}
                 />
             </div>
+
+            <div className="flex flex-col gap-1.5 w-[120px]">
+                <Label htmlFor="reinvest_amount" className="text-xs font-semibold uppercase text-muted-foreground">Re-Investment Amount</Label>
+                <Input 
+                    id="reinvest_amount"
+                    type="number"
+                    placeholder="$1000"
+                    className="bg-background"
+                    value={formData.reinvest_amount}
+                    onChange={(e) => setFormData({ ...formData, reinvest_amount: e.target.value})}
+                />
+            </div>
+
             <div className="flex flex-col gap-1.5 w-[120px]">
                 <Label htmlFor="interval" className="text-xs font-semibold uppercase text-muted-foreground">Re-Investment Interval (days)</Label>
                 <Input 
@@ -76,8 +89,8 @@ export function StockSearchForm({onSearch}) {
                     type="number"
                     placeholder="30"
                     className="bg-background"
-                    value={formData.reinvest}
-                    onChange={(e) => setFormData({ ...formData, reinvest: e.target.value})}
+                    value={formData.reinvest_interval}
+                    onChange={(e) => setFormData({ ...formData, reinvest_interval: e.target.value})}
                 />
             </div>
 
