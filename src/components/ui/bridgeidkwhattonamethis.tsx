@@ -32,6 +32,7 @@ export default function Dashboard() {
       <StockSearchForm onSearch={handleSearch} />
       
       {loading ? <p>Loading...</p> : <ChartLineInteractive data={chartData} ticker={symbol} />}
+
     </main>
   );
-}
+}           // add the bottom blocks here to show $$$ invested, $$$ returns and % returns, and maybe a table of transactions (what price bought and how much)
