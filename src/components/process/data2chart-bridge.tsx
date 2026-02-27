@@ -4,17 +4,8 @@
 "use client"
 import { useState } from "react"
 import { ChartLineInteractive } from "@/components/ui/chart-line-interactive"
-import { StockSearchForm } from "@/components/ui/stock-search-form"
+import { StockSearchForm } from "@/components/process/stock-search-form"
 import fetchHistoricalData from "@/utils/historical"
-
-function Analytics() {
-  // todo: display table-like analytics with badges at the bottom to show $$$ invested, $$$ returns and % returns, and maybe a table of transactions (what price bought and how much)
-  return (
-    <main>
-      
-    </main>
-  )
-}
 
 export default function Dashboard() {
   const [chartData, setChartData] = useState<any>(null);
