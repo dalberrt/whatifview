@@ -145,7 +145,7 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
             return entry;
             });
         
-        return chartData
+        return {chartData,analyticsData}
 
     } catch (err) {
         console.error("Fetch error:", err)

@@ -9,83 +9,42 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-]
+export function AnalyticsTable({ analyticsData }: { analyticsData?: Record<string, any> }) {
+  
+  if (!analyticsData) {
+    return <p className="text-muted-foreground text-center p-4">No analytics data yet. Search for stocks to see results.</p>
+  }
 
+  const tickers = Object.keys(analyticsData)
 
-
-
-export function AnalyticsTable() {
-    let total_thing = 999999;
-  // todo: display table-like analytics with badges at the bottom to show $$$ invested, $$$ returns and % returns, and maybe a table of transactions (what price bought and how much)
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead>Ticker</TableHead>
+          <TableHead className="text-right">Total Invested</TableHead>
+          <TableHead className="text-right">Shares Held</TableHead>
+          <TableHead className="text-right">Last Price</TableHead>
+          <TableHead className="text-right">Returns</TableHead>
+          <TableHead className="text-right">% Returns</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.slice(0, 3).map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        {tickers.map((ticker) => (
+          <TableRow key={ticker}>
+            <TableCell className="font-medium text-left">{ticker}</TableCell>
+            <TableCell className="text-right">${analyticsData[ticker].total_invested.toFixed(2)}</TableCell>
+            <TableCell className="text-right">{analyticsData[ticker].shares_held.toFixed(4)}</TableCell>
+            <TableCell className="text-right">${analyticsData[ticker].last_price.toFixed(2)}</TableCell>
+            <TableCell className={`text-right ${analyticsData[ticker].returns >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              ${analyticsData[ticker].returns.toFixed(2)}
+            </TableCell>
+            <TableCell className={`text-right font-semibold ${analyticsData[ticker].percentage_returns >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              {analyticsData[ticker].percentage_returns.toFixed(2)}%
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">${total_thing.toFixed(2)}</TableCell>
-        </TableRow>
-      </TableFooter>
     </Table>
   )
 }

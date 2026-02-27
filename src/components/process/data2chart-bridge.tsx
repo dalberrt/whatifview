@@ -11,6 +11,7 @@ import { AnalyticsTable } from "./analytics-table"
 
 export default function Dashboard() {
   const [chartData, setChartData] = useState<any>(null);
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [symbol, setSymbol] = useState(["Pick a Stock!"]);
 
@@ -18,12 +19,12 @@ export default function Dashboard() {
     setLoading(true)
     try {
       let tickers = [ticker1,ticker2]
-      const json = await fetchHistoricalData(tickers, p1, p2, entry, reinvest_amount, reinvest_interval)
-
+      const {chartData: json, analyticsData} = await fetchHistoricalData(tickers, p1, p2, entry, reinvest_amount, reinvest_interval)
       //console.log("Fetched Data:", json)    //delet later
 
       // console.log("Fetched Data:", json)    //delet later
       setChartData(json)
+      setAnalyticsData(analyticsData)
       setSymbol(tickers)
     } catch (error) {
       console.error("Error:", error)
@@ -38,7 +39,7 @@ export default function Dashboard() {
       
       {loading ? <p>Loading Charts...</p> : <ChartLineInteractive data={chartData} ticker={symbol} />}
 
-      {loading ? <p>Loading Analytics... : </p> : <AnalyticsTable />}
+      {loading ? <p>Loading Analytics... : </p> : <AnalyticsTable analyticsData={analyticsData} />}
 
     </main>
   );
