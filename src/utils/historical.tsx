@@ -5,6 +5,10 @@ function sharesCalculator(prices: number[], entry: number, reinvest_amount: numb
     let shares: Record<number, number> = {}
     let tempPrice = prices[0]
     let additionalShares = 0
+
+    let total_invested_amount : number = Number(entry)
+    let reinvestNum : number = Number(reinvest_amount)
+
     shares[dates[0]] = entry / tempPrice        // dictionary becomes --> date_string: shares_owned
     
     if (reinvest_interval > 0) {
@@ -12,7 +16,8 @@ function sharesCalculator(prices: number[], entry: number, reinvest_amount: numb
             // each reinvest interval, buy more shares with reinvest amount
             if (i % reinvest_interval === 0) {
                 tempPrice = prices[i]       //price at that date
-                additionalShares = reinvest_amount / tempPrice
+                additionalShares = reinvestNum / tempPrice
+                total_invested_amount += reinvestNum
                 // console.log(" reinvest", reinvest, "price", tempPrice, "additionalShares", additionalShares)   //delete later
                 shares[dates[i]] = (shares[dates[i - 1]] || 0) + additionalShares
             } else {
@@ -26,8 +31,8 @@ function sharesCalculator(prices: number[], entry: number, reinvest_amount: numb
             shares[dates[i]] = shares[dates[0]]
         }
     }
-
-    return shares
+    //console.log("total_invested_amount", total_invested_amount)
+    return {shares, total_invested_amount}
 }
 
 function dummyDataFill(tickers: string[], tickerShares: Record<string, Record<number, number>>, tickerPrices: Record<string, Record<number, number>>, tickerDates: Record<string, Record<number, number>>) {
@@ -47,8 +52,22 @@ function dummyDataFill(tickers: string[], tickerShares: Record<string, Record<nu
             earliestTicker = t
         }
     }
-    console.log(earliestTicker)
     return earliestTicker
+}
+
+function calculateAnalytics(shares_held: number, last_price: number, total_invested: number) {
+
+    let ticker_data: Record<string, number> = {}
+    ticker_data = {"total_invested": total_invested}
+    ticker_data["last_price"] = last_price
+    ticker_data["shares_held"] = shares_held
+
+    const returns = (shares_held * last_price) - total_invested
+    const percentage_returns = returns / total_invested * 100
+    ticker_data["returns"] = returns
+    ticker_data["percentage_returns"] = percentage_returns
+
+    return ticker_data
 }
 
 async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
@@ -60,7 +79,6 @@ async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
     return { dates, prices }
 }
 
-
 async function fetchHistoricalData(tickers: string[], p1: number, p2: number, entry: number, reinvest_amount: number = 0, reinvest_interval: number = 0) {
 
     try {
@@ -68,12 +86,13 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
         let tickerPrices: Record<string, Record<number, number>> = {}
         let tickerShares: Record<string, Record<number, number>> = {}
         
+        let analyticsData: Record<string, any> = {}   //{ticker: {shares_held: x, total_invested: y, last_price: z, returns: r, percentage_returns: p}}
 
         for (let t of tickers) {
             if (t){
                 const { dates, prices } = await fetchAPIDatesPrices(t, p1, p2)
 
-                let shares = sharesCalculator(prices, entry, reinvest_amount, reinvest_interval, dates)
+                let { shares, total_invested_amount } = sharesCalculator(prices, entry, reinvest_amount, reinvest_interval, dates)
                 tickerDates[t] = dates
                 tickerShares[t] = shares
                 tickerPrices[t] = {}
@@ -81,12 +100,15 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
                 for (let i = 0; i < prices.length; i++) {
                     tickerPrices[t][dates[i]] = prices[i]
                 }
+                analyticsData[t] = calculateAnalytics(shares[dates[dates.length - 1]], prices[prices.length - 1], total_invested_amount)
+
             }
             //console.log("tickerdates", tickerDates)
             //console.log("tickerprices", tickerPrices)
             //console.log("tickershares", tickerShares)
 
         }
+        console.log(analyticsData)
         let earliestTicker = dummyDataFill(tickers, tickerShares, tickerPrices, tickerDates)
 
         /*const chartData = tickerDates[earliestTicker].map((date, index) => ({
@@ -113,7 +135,6 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
             return entry;
             });
         
-        console.log(chartData)
         return chartData
 
     } catch (err) {
