@@ -73,9 +73,19 @@ function calculateAnalytics(shares_held: number, last_price: number, total_inves
 async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
     const res = await fetch(`https://corsproxy.io/?https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&period1=${p1}&period2=${p2}`)
     const data = await res.json()
-    const dates = data["chart"]["result"][0]["timestamp"]
-    // console.log("Dates from API for", ticker, dates)   //delete later
+    const timestamps = data["chart"]["result"][0]["timestamp"]
     const prices = data["chart"]["result"][0]["indicators"]["adjclose"][0]["adjclose"]
+
+    // Normalize timestamps to midnight UTC (start of day) cause of different timezonez when pulling different stock exchanges data
+    const dates = timestamps.map((ts: number) => {
+        const date = new Date(ts * 1000)
+        date.setUTCHours(0, 0, 0, 0)
+        return Math.floor(date.getTime() / 1000)
+    })
+
+    console.log("Dates from API for", ticker, dates)   //delete later
+    //console.log("Prices from API for", ticker, prices)   //delete later
+
     return { dates, prices }
 }
 
