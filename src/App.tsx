@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import whatifView from './assets/whatif.png'
 import Portfolio from './pages/portfolio';
+import { AvatarGroupExample } from './components/ui/avatargroup';
 
 import './App.css'
 
@@ -20,6 +21,7 @@ function App() {
 
       <Portfolio />
 
+      <AvatarGroupExample />
     </main>
 
   )
