@@ -1,5 +1,3 @@
-// src/utils/historical.ts
-
 function sharesCalculator(prices: number[], entry: number, reinvest_amount: number, reinvest_interval: number, dates: number[]) {
 
     let shares: Record<number, number> = {}

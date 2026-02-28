@@ -1,12 +1,4 @@
-// src/pages/portfolio.tsx
-
-import { useState, useEffect } from "react"
-import { ChartLineLinear } from "@/components/ui/chart-line-linear"
-import { ChartLineMultiple } from "@/components/ui/chart-line-multiple"
-import { ChartLineInteractive } from "@/components/ui/chart-line-interactive"
 import Dashboard from "@/components/process/data2chart-bridge"
-import { StockSearchForm } from "@/components/process/stock-search-form"
-import fetchHistoricalData from "@/utils/historical"
 
 function Portfolio() {
     return (
