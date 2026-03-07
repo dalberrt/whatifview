@@ -3,7 +3,7 @@ import Dashboard from "@/components/process/data2chart-bridge"
 function Portfolio() {
     return (
         <main>
-            <h1>Portfolio</h1>
+            <h1 className="text-2xl font-bold tracking-tight mb-6">Portfolio</h1>
             {/*{loading ? (
                 <p>Loading...</p>
             ) : (
