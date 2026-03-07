@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -22,7 +22,7 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
   const removeTicker = (i: number) =>
     setTickers(prev => prev.filter((_, idx) => idx !== i))
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     const active = tickers.filter(t => t.trim() !== '')
     if (active.length === 0) return
@@ -32,49 +32,45 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
   }
 
   const set = (key: keyof typeof formData) =>
-    (e: React.ChangeEvent<HTMLInputElement>) =>
+    (e: ChangeEvent<HTMLInputElement>) =>
       setFormData(prev => ({ ...prev, [key]: e.target.value }))
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border bg-card shadow-sm overflow-hidden">
 
       <div className="px-5 pt-5 pb-4 border-b">
-        <div className="flex items-center justify-between mb-3">
-          <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Tickers
-          </Label>
-          <Button
-            type="button"
-            variant="ghost"
-            size="xs"
-            onClick={addTicker}
-            className="gap-1 text-muted-foreground hover:text-foreground"
-          >
-            <Plus className="size-3" />
-            Add ticker
-          </Button>
-        </div>
-        <div className="flex flex-wrap gap-2">
+        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 block">
+          Tickers
+        </Label>
+        <div className="flex flex-wrap items-center gap-2">
           {tickers.map((ticker, i) => (
-            <div key={i} className="relative">
+            <div key={i} className="group relative">
               <Input
                 placeholder={i === 0 ? 'e.g. AAPL' : i === 1 ? 'e.g. MSFT' : `Ticker ${i + 1}`}
                 value={ticker}
                 onChange={e => updateTicker(i, e.target.value)}
-                className="w-[110px] pr-7 font-mono text-sm tracking-wide"
+                className="w-[110px] font-mono text-sm tracking-wide pr-6"
               />
               {tickers.length > 1 && (
                 <button
-                  type="button"
-                  onClick={() => removeTicker(i)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label={`Remove ticker ${i + 1}`}
-                >
-                  <X className="size-3" />
+                    type="button"
+                    onClick={() => removeTicker(i)}
+                    className="absolute right-0.5 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-500 transition-all p-0.5"
+                    aria-label={`Remove ticker ${i + 1}`}
+                    >
+                    <X className="size-3.5" />
                 </button>
               )}
             </div>
           ))}
+          <button
+            type="button"
+            onClick={addTicker}
+            className="flex items-center gap-1 h-9 px-3 rounded-md border border-dashed text-xs text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+          >
+            <Plus className="size-3" />
+            Add
+          </button>
         </div>
       </div>
 
@@ -143,7 +139,7 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
         <Button
           type="submit"
           size="lg"
-          className="gap-2 px-6 font-semibold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
+          className="gap-2 px-6 font-semibold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 bg-indigo-600 hover:bg-indigo-700 text-white border-0"
           disabled={tickers.every(t => t.trim() === '')}
         >
           <Search className="size-4" />

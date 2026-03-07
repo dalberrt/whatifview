@@ -33,7 +33,7 @@ function sharesCalculator(prices: number[], entry: number, reinvest_amount: numb
     return {shares, total_invested_amount}
 }
 
-function dummyDataFill(tickers: string[], tickerShares: Record<string, Record<number, number>>, tickerPrices: Record<string, Record<number, number>>, tickerDates: Record<string, Record<number, number>>) {
+function dummyDataFill(tickers: string[], _tickerShares: Record<string, Record<number, number>>, _tickerPrices: Record<string, Record<number, number>>, tickerDates: Record<string, number[]>) {
     //FILL IN 0 for dates before IPO of a stock
     // first we nid find ticker with earliest start date
     // then for each ticker, fill in 0 shares and 0 price for dates before its first date
@@ -90,7 +90,7 @@ async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
 async function fetchHistoricalData(tickers: string[], p1: number, p2: number, entry: number, reinvest_amount: number = 0, reinvest_interval: number = 0) {
 
     try {
-        let tickerDates: Record<string, Record<number, number>> = {}
+        let tickerDates: Record<string, number[]> = {}
         let tickerPrices: Record<string, Record<number, number>> = {}
         let tickerShares: Record<string, Record<number, number>> = {}
         
@@ -126,7 +126,7 @@ async function fetchHistoricalData(tickers: string[], p1: number, p2: number, en
             car: 1000 + index * 10  //dummy data for car,
             }))*/
 
-        const chartData = tickerDates[earliestTicker].map((date, index) => {
+        const chartData = tickerDates[earliestTicker].map((date: number, index: number) => {
             const entry = {
                 date: new Date(date * 1000).toISOString().split('T')[0],
                 [tickers[0]]: tickerShares[tickers[0]][date] * tickerPrices[tickers[0]][date], 

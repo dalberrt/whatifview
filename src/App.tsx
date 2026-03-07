@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import Portfolio from './pages/portfolio'
 import LandingPage from './components/ui/landing'
 import Navbar from './components/ui/navbar'
@@ -21,27 +22,41 @@ function App() {
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark')
 
-  if (view === 'landing') {
-    return (
-      <LandingPage
-        onGetStarted={() => setView('dashboard')}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navbar
-        onLogoClick={() => setView('landing')}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
-      <main className="max-w-6xl mx-auto px-6 py-8">
-        <Portfolio />
-      </main>
-    </div>
+    <AnimatePresence mode="wait">
+      {view === 'landing' ? (
+        <motion.div
+          key="landing"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, y: -24, filter: 'blur(4px)' }}
+          transition={{ duration: 0.28, ease: 'easeIn' }}
+        >
+          <LandingPage
+            onGetStarted={() => setView('dashboard')}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+          />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="dashboard"
+          initial={{ opacity: 0, y: 32 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -16 }}
+          transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] }}
+          className="min-h-screen bg-background text-foreground"
+        >
+          <Navbar
+            onLogoClick={() => setView('landing')}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+          />
+          <main className="max-w-6xl mx-auto px-6 py-8">
+            <Portfolio />
+          </main>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
 

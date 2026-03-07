@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 
 import {
@@ -69,7 +68,7 @@ export function ChartLineInteractive({ data, ticker }: { data: any; ticker: stri
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(v) =>
+              tickFormatter={(v: number) =>
                 `$${Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(v)}`
               }
               width={56}
