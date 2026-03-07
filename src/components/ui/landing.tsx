@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode, type CSSProperties } from 'react'
 import whatifLogo from '@/assets/whatif.png'
 import { Button } from '@/components/ui/button'
 import { Moon, Sun, TrendingUp, RefreshCcw, BarChart2 } from 'lucide-react'
@@ -14,17 +14,60 @@ export default function LandingPage({ onGetStarted, theme, onToggleTheme }: Land
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 30)
+    const t = setTimeout(() => setVisible(true), 40)
     return () => clearTimeout(t)
   }, [])
 
+  const fadeStyle = (delayMs: number): CSSProperties => ({
+    animation: visible ? `fade-up 0.6s ease ${delayMs}ms both` : 'none',
+    opacity: visible ? undefined : 0,
+  })
+
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between px-8 py-5">
+    <div className="relative min-h-screen bg-background text-foreground flex flex-col overflow-hidden">
+
+      {/* ── Animated background orbs ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+        {/* Orb 1 – top-left, indigo */}
+        <div
+          className="absolute rounded-full opacity-[0.22] dark:opacity-[0.38]"
+          style={{
+            width: 640, height: 640,
+            background: 'radial-gradient(circle at center, #6366f1 0%, transparent 70%)',
+            filter: 'blur(90px)',
+            top: -180, left: -160,
+            animation: 'orb-float-1 16s ease-in-out infinite',
+          }}
+        />
+        {/* Orb 2 – bottom-right, violet */}
+        <div
+          className="absolute rounded-full opacity-[0.18] dark:opacity-[0.32]"
+          style={{
+            width: 560, height: 560,
+            background: 'radial-gradient(circle at center, #8b5cf6 0%, transparent 70%)',
+            filter: 'blur(100px)',
+            bottom: -120, right: -120,
+            animation: 'orb-float-2 20s ease-in-out infinite',
+          }}
+        />
+        {/* Orb 3 – mid-right, cyan */}
+        <div
+          className="absolute rounded-full opacity-[0.14] dark:opacity-[0.26]"
+          style={{
+            width: 420, height: 420,
+            background: 'radial-gradient(circle at center, #06b6d4 0%, transparent 70%)',
+            filter: 'blur(80px)',
+            top: '38%', left: '58%',
+            animation: 'orb-float-3 24s ease-in-out infinite',
+          }}
+        />
+      </div>
+
+      {/* ── Header ── */}
+      <header className="relative z-10 flex items-center justify-between px-8 py-5">
         <div className="flex items-center gap-2.5">
           <img src={whatifLogo} alt="WhatIF" className="h-7 w-auto" />
-          <span className="font-semibold tracking-tight">WhatIF</span>
+          <span className="font-semibold tracking-tight text-sm">WhatIF</span>
         </div>
         <Button variant="ghost" size="icon" onClick={onToggleTheme} aria-label="Toggle theme">
           {theme === 'dark'
@@ -33,68 +76,70 @@ export default function LandingPage({ onGetStarted, theme, onToggleTheme }: Land
         </Button>
       </header>
 
-      {/* Hero */}
-      <main
-        className="flex-1 flex flex-col items-center justify-center px-6 text-center"
-        style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(12px)',
-          transition: 'opacity 0.5s ease, transform 0.5s ease',
-        }}
-      >
-        <img
-          src={whatifLogo}
-          alt="WhatIF logo"
-          className="h-20 w-auto mb-8 opacity-90"
-        />
+      {/* ── Hero ── */}
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center">
 
-        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight leading-tight mb-5">
+        <div style={fadeStyle(0)}>
+          <img
+            src={whatifLogo}
+            alt="WhatIF logo"
+            className="h-[72px] w-auto mx-auto mb-8 drop-shadow-lg"
+          />
+        </div>
+
+        <h1
+          className="text-5xl sm:text-6xl font-bold tracking-tight leading-[1.1] mb-5"
+          style={fadeStyle(80)}
+        >
           What if you invested<br className="hidden sm:block" /> differently?
         </h1>
 
-        <p className="text-base sm:text-lg text-muted-foreground max-w-[420px] mb-10 leading-relaxed">
-          Simulate how a recurring investment in any stock would have grown over any period.
-          Compare tickers side by side and see the real numbers.
+        <p
+          className="text-base sm:text-lg text-muted-foreground max-w-[440px] mb-10 leading-relaxed"
+          style={fadeStyle(160)}
+        >
+          Simulate a recurring investment in any stock over any timeframe.
+          Compare tickers side by side and see exactly what your portfolio would be worth today.
         </p>
 
-        <Button
-          size="lg"
-          onClick={onGetStarted}
-          className="px-10 h-12 text-base font-semibold shadow-md hover:shadow-lg transition-shadow"
-        >
-          Get Started
-        </Button>
+        <div style={fadeStyle(240)}>
+          <Button
+            size="lg"
+            onClick={onGetStarted}
+            className="px-10 h-12 text-[15px] font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+          >
+            Get Started
+          </Button>
+        </div>
 
-        {/* Social proof hint */}
-        <div className="mt-8 flex items-center gap-2 text-sm text-muted-foreground">
+        <div
+          className="mt-9 flex items-center gap-3 text-sm text-muted-foreground"
+          style={fadeStyle(320)}
+        >
           <AvatarGroupExample />
-          <span className="ml-1">Built by investors, for investors</span>
+          <span>Built by investors, for investors</span>
         </div>
       </main>
 
-      {/* Feature cards */}
+      {/* ── Feature cards ── */}
       <section
-        className="max-w-3xl mx-auto w-full px-6 pb-16 grid grid-cols-1 sm:grid-cols-3 gap-4"
-        style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(16px)',
-          transition: 'opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s',
-        }}
+        className="relative z-10 max-w-3xl mx-auto w-full px-6 pb-16 pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4"
+        style={fadeStyle(400)}
       >
         <FeatureCard
           icon={<TrendingUp className="size-5" />}
           title="Real historical data"
-          desc="Daily prices pulled directly from Yahoo Finance for any ticker."
+          desc="Daily prices from Yahoo Finance for any publicly traded ticker."
         />
         <FeatureCard
           icon={<RefreshCcw className="size-5" />}
           title="DCA simulation"
-          desc="Add recurring investments at any interval on top of your initial entry."
+          desc="Layer periodic re-investments on top of your initial entry at any interval."
         />
         <FeatureCard
           icon={<BarChart2 className="size-5" />}
-          title="Side-by-side comparison"
-          desc="Compare two tickers on the same chart to see which outperformed."
+          title="Multi-ticker comparison"
+          desc="Add as many tickers as you want and see them all on the same chart."
         />
       </section>
     </div>
@@ -103,8 +148,8 @@ export default function LandingPage({ onGetStarted, theme, onToggleTheme }: Land
 
 function FeatureCard({ icon, title, desc }: { icon: ReactNode; title: string; desc: string }) {
   return (
-    <div className="flex flex-col items-center text-center gap-2.5 p-5 rounded-xl border bg-card text-card-foreground shadow-sm">
-      <span className="text-muted-foreground">{icon}</span>
+    <div className="flex flex-col items-center text-center gap-3 p-5 rounded-xl border bg-card/60 backdrop-blur-sm text-card-foreground shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+      <span className="p-2 rounded-lg bg-muted text-muted-foreground">{icon}</span>
       <h3 className="font-semibold text-sm">{title}</h3>
       <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
     </div>

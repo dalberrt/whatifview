@@ -3,7 +3,6 @@
 import * as React from "react"
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 
-
 import {
   Card,
   CardContent,
@@ -18,111 +17,104 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 
-export const description = "An interactive line chart"
+export function ChartLineInteractive({ data, ticker }: { data: any; ticker: string[] }) {
 
-export function ChartLineInteractive({data, ticker}) {
-  const chartConfig = {
-  car: {
-    label: "Car",
-    color: "var(--chart-3)",
+  const chartConfig: ChartConfig = {
   }
-} satisfies ChartConfig
-  for (let i = 0; i < ticker.length; i++ ) {
-    
-    if (ticker.length > 1) {
-      chartConfig[ticker[i]] = {
-        label: ticker[i],
-        color:  `var(--chart-${i+1})`
-      }
-    }
-    
-  }
-  
-  const [activeChart] =
-    React.useState<keyof typeof chartConfig>(ticker)
 
-  const [activeChart3] =
-    React.useState<keyof typeof chartConfig>("car")
+  ticker.forEach((t, i) => {
+    if (t) chartConfig[t] = { label: t, color: `var(--chart-${i + 1})` }
+  })
+
+  const dateRange = data
+    ? `${data[0]?.date ?? ''} → ${data.at(-1)?.date ?? ''}`
+    : null
 
   return (
-    <Card className="mx-auto w-full md:w-[70vw] py-4 sm:py-0">
-      <CardHeader className="flex flex-col items-stretch border-b p-[40px] sm:flex-row">
-        <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>{ticker}</CardTitle>
-          {data &&
-            <CardDescription>
-            Showing value increase from {data[0]["date"]} to {data.at(-1)["date"]}
-          </CardDescription>
-          }
-          
+    <Card className="w-full">
+      <CardHeader className="border-b px-6 py-4">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <CardTitle className="text-base">
+              {ticker.length > 0 ? ticker.join(' vs ') : 'Portfolio value over time'}
+            </CardTitle>
+            {dateRange && (
+              <CardDescription className="mt-0.5">{dateRange}</CardDescription>
+            )}
+          </div>
+          {/* Legend dots */}
+          <div className="flex flex-wrap gap-3">
+            {ticker.map((t, i) => (
+              <div key={t} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span
+                  className="inline-block size-2.5 rounded-full"
+                  style={{ background: `var(--chart-${i + 1})` }}
+                />
+                {t}
+              </div>
+            ))}
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="px-2 sm:p-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
+
+      <CardContent className="px-2 pt-4 sm:px-6">
+        <ChartContainer config={chartConfig} className="aspect-auto h-[280px] w-full">
           <LineChart
             accessibilityLayer
             data={data}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+            margin={{ left: 8, right: 8, top: 4, bottom: 4 }}
           >
-            <CartesianGrid vertical={false} />
-            <YAxis 
-              tickLine={false} 
-              axisLine={false} 
+            <CartesianGrid vertical={false} className="stroke-border/50" />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
               tickMargin={8}
-              
+              tickFormatter={(v) =>
+                `$${Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(v)}`
+              }
+              width={56}
             />
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("en-GB", {
+              minTickGap={40}
+              tickFormatter={(value) =>
+                new Date(value).toLocaleDateString("en-GB", {
                   day: "numeric",
                   month: "short",
-                  year: "numeric",
+                  year: "2-digit",
                 })
-              }}
+              }
             />
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  className="w-[150px]"
-                  nameKey="views"
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-GB", {
+                  className="w-[170px]"
+                  labelFormatter={(value) =>
+                    new Date(value).toLocaleDateString("en-GB", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
                     })
-                  }}
+                  }
                 />
               }
             />
-            {ticker.map((ticker, index) => 
+
+            {/* One line per ticker */}
+            {ticker.map((t) => (
               <Line
-              dataKey={activeChart[index]}
-              type="monotone"
-              stroke={`var(--color-${activeChart[index]})`}
-              strokeWidth={2}
-              dot={false}
+                key={t}
+                dataKey={t}
+                type="monotone"
+                stroke={`var(--color-${t})`}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 0 }}
               />
-            )}
-            <Line
-              dataKey={activeChart3}
-              type="monotone"
-              stroke={`var(--color-${activeChart3})`}
-              strokeWidth={2}
-              dot={false}
-            />
+            ))}
           </LineChart>
         </ChartContainer>
       </CardContent>
