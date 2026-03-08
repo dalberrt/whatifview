@@ -68,7 +68,16 @@ function calculateAnalytics(shares_held: number, last_price: number, total_inves
     return ticker_data
 }
 
+import { getPriceCache, setPriceCache } from './cache'
+
 async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
+    // Check localStorage cache before hitting the API
+    const cached = getPriceCache(ticker, p1, p2)
+    if (cached) {
+        console.log(`[cache hit] ${ticker} ${p1}–${p2}`)
+        return cached
+    }
+
     const res = await fetch(`https://corsproxy.io/?https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&period1=${p1}&period2=${p2}`)
     const data = await res.json()
     const timestamps = data["chart"]["result"][0]["timestamp"]
@@ -81,10 +90,9 @@ async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
         return Math.floor(date.getTime() / 1000)
     })
 
-    console.log("Dates from API for", ticker, dates)   //delete later
-    //console.log("Prices from API for", ticker, prices)   //delete later
-
-    return { dates, prices }
+    const result = { dates, prices }
+    setPriceCache(ticker, p1, p2, result)
+    return result
 }
 
 async function fetchHistoricalData(tickers: string[], p1: number, p2: number, entry: number, reinvest_amount: number = 0, reinvest_interval: number = 0) {

@@ -1,14 +1,15 @@
 // Bridges StockSearchForm → fetchHistoricalData → ChartLineInteractive + AnalyticsTable
 
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { ChartLineInteractive } from "@/components/ui/chart-line-interactive"
 import { StockSearchForm } from "@/components/process/stock-search-form"
 import fetchHistoricalData from "@/utils/historical"
 import { AnalyticsTable } from "./analytics-table"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { BarChart2, Loader2 } from "lucide-react"
+import { BarChart2, Loader2, History } from "lucide-react"
+import { getSession, setSession } from "@/utils/cache"
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -20,11 +21,23 @@ const fadeSlide = {
 }
 
 export default function Dashboard() {
-  const [chartData, setChartData]       = useState<any>(null)
+  const [chartData, setChartData]         = useState<any>(null)
   const [analyticsData, setAnalyticsData] = useState<any>(null)
-  const [loading, setLoading]           = useState(false)
-  const [symbol, setSymbol]             = useState<string[]>([])
-  const [error, setError]               = useState<string | null>(null)
+  const [loading, setLoading]             = useState(false)
+  const [symbol, setSymbol]               = useState<string[]>([])
+  const [error, setError]                 = useState<string | null>(null)
+  const [restored, setRestored]           = useState(false)
+
+  // Restore last session on mount
+  useEffect(() => {
+    const session = getSession()
+    if (session) {
+      setChartData(session.chartData)
+      setAnalyticsData(session.analyticsData)
+      setSymbol(session.symbols)
+      setRestored(true)
+    }
+  }, [])
 
   const handleSearch = async (
     tickers: string[],
@@ -36,6 +49,7 @@ export default function Dashboard() {
   ) => {
     setLoading(true)
     setError(null)
+    setRestored(false)
     try {
       const result = await fetchHistoricalData(
         tickers, p1, p2,
@@ -47,6 +61,7 @@ export default function Dashboard() {
         setChartData(result.chartData)
         setAnalyticsData(result.analyticsData)
         setSymbol(tickers)
+        setSession({ chartData: result.chartData, analyticsData: result.analyticsData, symbols: tickers })
       } else {
         setError('No data returned. Check your tickers and date range.')
       }
@@ -58,7 +73,6 @@ export default function Dashboard() {
     }
   }
 
-  // Determine which state key to show
   const stateKey = loading
     ? 'loading'
     : error
@@ -123,6 +137,18 @@ export default function Dashboard() {
         {/* Results */}
         {stateKey === 'results' && (
           <motion.div key="results" className="space-y-5" {...fadeSlide}>
+
+            {/* Restored session badge */}
+            {restored && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-1.5 text-xs text-muted-foreground"
+              >
+                <History className="size-3.5" />
+                Showing your last session — run Analyze to refresh
+              </motion.div>
+            )}
 
             <ChartLineInteractive data={chartData} ticker={symbol} />
 
