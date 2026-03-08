@@ -82,8 +82,12 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
   const [errors, setErrors]     = useState<FormErrors>({})
   const [submitted, setSubmitted] = useState(false)
 
-  const updateTicker = (i: number, val: string) =>
-    setTickers(prev => prev.map((t, idx) => idx === i ? val.toUpperCase() : t))
+  const updateTicker = (i: number, val: string) => {
+    // Whitelist: only valid ticker characters, max 10 chars
+    // Prevents URL injection and CSS variable injection via ticker name
+    const sanitized = val.toUpperCase().replace(/[^A-Z0-9.\-^]/g, '').slice(0, 10)
+    setTickers(prev => prev.map((t, idx) => idx === i ? sanitized : t))
+  }
 
   const addTicker = () => setTickers(prev => [...prev, ''])
 

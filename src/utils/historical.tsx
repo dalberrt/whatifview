@@ -78,7 +78,7 @@ async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
         return cached
     }
 
-    const res = await fetch(`https://corsproxy.io/?https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&period1=${p1}&period2=${p2}`)
+    const res = await fetch(`https://corsproxy.io/?https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&period1=${p1}&period2=${p2}`)
     const data = await res.json()
     const timestamps = data["chart"]["result"][0]["timestamp"]
     const prices = data["chart"]["result"][0]["indicators"]["adjclose"][0]["adjclose"]
