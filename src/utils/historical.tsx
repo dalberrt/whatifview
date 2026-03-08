@@ -71,19 +71,26 @@ function calculateAnalytics(shares_held: number, last_price: number, total_inves
 import { getPriceCache, setPriceCache } from './cache'
 
 async function fetchAPIDatesPrices(ticker: string, p1: number, p2: number) {
-    // Check localStorage cache before hitting the API
+    // cache first
     const cached = getPriceCache(ticker, p1, p2)
     if (cached) {
-        console.log(`[cache hit] ${ticker} ${p1}–${p2}`)
+        ///console.log(`[cache hit] ${ticker} ${p1}–${p2}`)
         return cached
     }
 
-    const res = await fetch(`https://corsproxy.io/?https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&period1=${p1}&period2=${p2}`)
+    // IF LOCAL DEV --> corsproxy | IF PROD --> call own API route (which calls Yahoo API and adds CORS headers)
+    const isDev = import.meta.env.DEV
+    const url = isDev 
+        ? `https://corsproxy.io/?https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&period1=${p1}&period2=${p2}`
+        : `/api/yahoo?ticker=${encodeURIComponent(ticker)}&period1=${p1}&period2=${p2}`
+    
+    const res = await fetch(url)
     const data = await res.json()
+    
     const timestamps = data["chart"]["result"][0]["timestamp"]
     const prices = data["chart"]["result"][0]["indicators"]["adjclose"][0]["adjclose"]
 
-    // Normalize timestamps to midnight UTC (start of day) cause of different timezonez when pulling different stock exchanges data
+    // Normalize timestamps to midnight UTC
     const dates = timestamps.map((ts: number) => {
         const date = new Date(ts * 1000)
         date.setUTCHours(0, 0, 0, 0)
