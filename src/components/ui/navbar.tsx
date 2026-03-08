@@ -21,7 +21,7 @@ export default function Navbar({ onLogoClick, theme, onToggleTheme }: NavbarProp
 
         <motion.button
           onClick={onLogoClick}
-          className="flex items-center gap-2 cursor-pointer dark:text-white text-black hover:opacity-70"
+          className="flex items-center gap-2 cursor-pointer text-foreground hover:opacity-70"
           aria-label="Back to home"
           whileHover={{ opacity: 0.7 }}
           whileTap={{ scale: 0.96 }}
@@ -44,7 +44,7 @@ export default function Navbar({ onLogoClick, theme, onToggleTheme }: NavbarProp
               animate={{ rotate: 0, opacity: 1, scale: 1 }}
               exit={{ rotate: 40, opacity: 0, scale: 0.7 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className="flex items-center justify-center dark:text-white text-black"
+              className="flex items-center justify-center text-foreground"
             >
               {theme === 'dark'
                 ? <Sun className="size-[18px]" />

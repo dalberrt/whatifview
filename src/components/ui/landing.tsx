@@ -27,19 +27,19 @@ const item = {
 const FEATURES = [
   {
     icon: <TrendingUp className="size-[18px]" />,
-    grad: 'from-indigo-500 to-violet-600',
+    grad: 'from-amber-700 to-amber-900',
     title: 'Real historical data',
     desc: 'Daily adjusted prices from Yahoo Finance for any publicly listed ticker.',
   },
   {
     icon: <RefreshCcw className="size-[18px]" />,
-    grad: 'from-violet-500 to-purple-700',
+    grad: 'from-stone-500 to-stone-700',
     title: 'DCA simulation',
     desc: 'Layer recurring investments at any interval on top of your initial entry.',
   },
   {
     icon: <BarChart2 className="size-[18px]" />,
-    grad: 'from-cyan-500 to-sky-600',
+    grad: 'from-teal-700 to-teal-900',
     title: 'Multi-ticker compare',
     desc: 'Add unlimited tickers and plot them all on a single interactive chart.',
   },
@@ -55,10 +55,10 @@ export default function LandingPage({ onGetStarted, theme, onToggleTheme }: Land
       {/* ── Animated gradient orbs (Framer Motion) ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
         <motion.div
-          className="absolute rounded-full opacity-[0.28] dark:opacity-[0.42]"
+          className="absolute rounded-full opacity-[0.32] dark:opacity-[0.22]"
           style={{
             width: 720, height: 720,
-            background: 'radial-gradient(circle at center, #6366f1 0%, transparent 68%)',
+            background: 'radial-gradient(circle at center, #C4A870 0%, transparent 68%)',
             filter: 'blur(100px)',
             top: -260, left: -210,
           }}
@@ -66,10 +66,10 @@ export default function LandingPage({ onGetStarted, theme, onToggleTheme }: Land
           transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute rounded-full opacity-[0.22] dark:opacity-[0.35]"
+          className="absolute rounded-full opacity-[0.24] dark:opacity-[0.18]"
           style={{
             width: 600, height: 600,
-            background: 'radial-gradient(circle at center, #8b5cf6 0%, transparent 68%)',
+            background: 'radial-gradient(circle at center, #B8956A 0%, transparent 68%)',
             filter: 'blur(90px)',
             bottom: -170, right: -160,
           }}
@@ -77,10 +77,10 @@ export default function LandingPage({ onGetStarted, theme, onToggleTheme }: Land
           transition={{ duration: 23, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute rounded-full opacity-[0.16] dark:opacity-[0.26]"
+          className="absolute rounded-full opacity-[0.18] dark:opacity-[0.14]"
           style={{
             width: 460, height: 460,
-            background: 'radial-gradient(circle at center, #06b6d4 0%, transparent 68%)',
+            background: 'radial-gradient(circle at center, #D4C4A0 0%, transparent 68%)',
             filter: 'blur(80px)',
             top: '38%', left: '56%',
           }}
@@ -165,8 +165,8 @@ export default function LandingPage({ onGetStarted, theme, onToggleTheme }: Land
             <motion.button
               type="button"
               onClick={onGetStarted}
-              className="group relative inline-flex items-center gap-2.5 px-8 h-[50px] rounded-xl font-semibold text-[15px] text-white overflow-hidden shadow-glow cursor-pointer"
-              style={{ background: 'linear-gradient(135deg, #6366f1 0%, #7c3aed 55%, #0891b2 100%)' }}
+              className="group relative inline-flex items-center gap-2.5 px-8 h-[50px] rounded-xl font-semibold text-[15px] text-amber-50 overflow-hidden shadow-glow cursor-pointer"
+              style={{ background: 'linear-gradient(135deg, #5C3D20 0%, #7A5030 55%, #4A3520 100%)' }}
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 420, damping: 22 }}
@@ -222,7 +222,7 @@ function FeatureCard({
       transition={{ type: 'spring', stiffness: 240, damping: 26, delay: 0.55 + index * 0.1 }}
       whileHover={{
         y: -6,
-        boxShadow: '0 22px 52px rgba(99,102,241,0.18), 0 0 0 1px rgba(99,102,241,0.22)',
+        boxShadow: '0 22px 52px rgba(160,110,60,0.14), 0 0 0 1px rgba(140,100,55,0.20)',
       }}
       className="flex flex-col items-center text-center gap-3 p-6 rounded-xl border bg-card/55 backdrop-blur-md text-card-foreground shadow-sm cursor-default"
     >

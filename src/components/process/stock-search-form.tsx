@@ -139,7 +139,7 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
         <Button
           type="submit"
           size="lg"
-          className="gap-2 px-6 font-semibold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 bg-indigo-600 hover:bg-indigo-700 text-white border-0"
+          className="gap-2 px-6 font-semibold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 bg-primary hover:bg-primary/85 text-primary-foreground border-0"
           disabled={tickers.every(t => t.trim() === '')}
         >
           <Search className="size-4" />
