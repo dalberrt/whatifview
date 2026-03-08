@@ -4,7 +4,7 @@
 
 i got tired of websites asking me to pay money to do a simple backtest so i built this thing.
 
-yahoo pls never delete this api big thank.
+if yahoo turns off their api taps this will stop working (big thank yahoo)
 
 A stock portfolio "what if" simulator. Enter any tickers, a date range, and an investment amount to see exactly what your returns would have been — with support for recurring DCA contributions.
 
