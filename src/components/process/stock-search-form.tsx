@@ -82,14 +82,14 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
           <div className="flex items-center gap-2">
             <Input
               type="date"
-              className="w-[148px]"
+              className="w-[148px] [&::-webkit-calendar-picker-indicator]:dark:invert"
               value={formData.start}
               onChange={set('start')}
             />
             <span className="text-muted-foreground text-sm">–</span>
             <Input
               type="date"
-              className="w-[148px]"
+              className="w-[148px] [&::-webkit-calendar-picker-indicator]:dark:invert"
               value={formData.end}
               onChange={set('end')}
             />

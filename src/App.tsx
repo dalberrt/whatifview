@@ -44,14 +44,16 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
           transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] }}
-          className="min-h-screen bg-background text-foreground"
+          className="relative min-h-screen bg-background text-foreground"
         >
+          {/* Grid paper background */}
+          <div className="fixed inset-0 bg-dot-grid pointer-events-none" aria-hidden />
           <Navbar
             onLogoClick={() => setView('landing')}
             theme={theme}
             onToggleTheme={toggleTheme}
           />
-          <main className="max-w-6xl mx-auto px-6 py-8">
+          <main className="relative max-w-6xl mx-auto px-6 py-8">
             <Portfolio />
           </main>
         </motion.div>

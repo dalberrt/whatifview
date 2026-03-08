@@ -5,7 +5,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 
-export function AvatarGroupExample() {
+export function AvatarGroupUs() {
   return (
     <AvatarGroup className="grayscale">
       <Avatar size="lg">

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import whatifLogo from '@/assets/whatif.png'
 import { Button } from '@/components/ui/button'
 import { Moon, Sun, TrendingUp, RefreshCcw, BarChart2, ArrowRight } from 'lucide-react'
-import { AvatarGroupExample } from '@/components/ui/avatargroup'
+import { AvatarGroupUs } from '@/components/ui/avatargroup'
 
 interface LandingPageProps {
   onGetStarted: () => void
@@ -192,7 +192,7 @@ export default function LandingPage({ onGetStarted, theme, onToggleTheme }: Land
             variants={item}
             className="mt-9 flex items-center gap-3 text-sm text-muted-foreground"
           >
-            <AvatarGroupExample />
+            <AvatarGroupUs />
             <span>Built by investors, for investors</span>
           </motion.div>
         </motion.div>
