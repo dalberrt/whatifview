@@ -2,6 +2,8 @@
 
 ![Project Icon](./src/assets/whatif.png)
 
+[View vercel prod deployment](https://whatifview.vercel.app/)
+
 i got tired of websites asking me to pay money to do a simple backtest so i built this thing.
 
 if yahoo turns off their api taps this will stop working (big thank yahoo)
