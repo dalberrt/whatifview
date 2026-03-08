@@ -7,11 +7,11 @@ A stock portfolio "what if" simulator. Enter any tickers, a date range, and an i
 ## What you can do
 
 - Simulate a lump-sum investment in any publicly listed stock
-- Layer recurring investments (dollar-cost averaging) at any interval
-- Compare multiple tickers side by side on a single interactive chart
-- View a full analytics breakdown: total invested, shares held, average price, last price, absolute and percentage returns
+- 🕰️ Layer recurring investments (dollar-cost averaging) at any interval
+- 📈 Compare multiple tickers side by side on a single interactive chart
+- 💸View a full analytics breakdown: total invested, shares held, average price, last price, absolute and percentage returns
 - Sort the analytics table by any column (returns, average price, etc.)
-- Drag and reorder analytics columns to focus on what matters
+- Drag and reorder analytics columns
 
 ## Installation
 
