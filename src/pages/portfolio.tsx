@@ -1,9 +1,10 @@
 import Dashboard from "@/components/process/data2chart-bridge"
+import { AvatarGroupUs } from "@/components/ui/avatargroup"
 
 function Portfolio() {
     return (
         <main>
-            <h1>Portfolio</h1>
+            <h1 className="text-2xl font-bold tracking-tight mb-6">Portfolio</h1>
             {/*{loading ? (
                 <p>Loading...</p>
             ) : (
@@ -11,7 +12,10 @@ function Portfolio() {
                     {JSON.stringify(data, null, 2)}
                 </pre>
             )}*/}
-            <Dashboard />        
+            <Dashboard />
+            <div className="mt-10 flex justify-center">
+                <AvatarGroupUs />
+            </div>
         </main>
     )
 }

@@ -1,103 +1,151 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Search } from "lucide-react" 
+import { Search, Plus, X } from "lucide-react"
 
-export function StockSearchForm({onSearch}) {
-    const [formData, setFormData] = useState({ ticker1: "", ticker2: "", start: "", end: "", entry: "", reinvest_amount: "", reinvest_interval: ""});
+interface StockSearchFormProps {
+  onSearch: (tickers: string[], p1: number, p2: number, entry: string, reinvest_amount: string, reinvest_interval: string) => void
+}
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        const p1 = Math.floor(new Date(formData.start).getTime() / 1000);
-        const p2 = Math.floor(new Date(formData.end).getTime() / 1000);
+export function StockSearchForm({ onSearch }: StockSearchFormProps) {
+  const [tickers, setTickers] = useState<string[]>(['', ''])
+  const [formData, setFormData] = useState({
+    start: '', end: '', entry: '', reinvest_amount: '', reinvest_interval: ''
+  })
 
-        onSearch(formData.ticker1, formData.ticker2, p1, p2, formData.entry, formData.reinvest_amount, formData.reinvest_interval);
-    }
-    return(
-        
-        <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4 p-4 bg-muted/50 rounded-lg mb-6">
-            <div className="flex flex-col gap-1.5 flex-1 min-w-[120px]">
-                <Label htmlFor="ticker" className="text-xs font-semibold uppercase text-muted-foreground">Ticker</Label>
-                <Input 
-                    id="ticker"
-                    placeholder="e.g. AAPL" 
-                    className="bg-background"
-                    value={formData.ticker1}
-                    onChange={(e) => setFormData({ ...formData, ticker1: e.target.value.toUpperCase() })} 
-                />
+  const updateTicker = (i: number, val: string) =>
+    setTickers(prev => prev.map((t, idx) => idx === i ? val.toUpperCase() : t))
+
+  const addTicker = () => setTickers(prev => [...prev, ''])
+
+  const removeTicker = (i: number) =>
+    setTickers(prev => prev.filter((_, idx) => idx !== i))
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    const active = tickers.filter(t => t.trim() !== '')
+    if (active.length === 0) return
+    const p1 = Math.floor(new Date(formData.start).getTime() / 1000)
+    const p2 = Math.floor(new Date(formData.end).getTime() / 1000)
+    onSearch(active, p1, p2, formData.entry, formData.reinvest_amount, formData.reinvest_interval)
+  }
+
+  const set = (key: keyof typeof formData) =>
+    (e: ChangeEvent<HTMLInputElement>) =>
+      setFormData(prev => ({ ...prev, [key]: e.target.value }))
+
+  return (
+    <form onSubmit={handleSubmit} className="rounded-xl border bg-card shadow-sm overflow-hidden">
+
+      <div className="px-5 pt-5 pb-4 border-b">
+        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 block">
+          Tickers
+        </Label>
+        <div className="flex flex-wrap items-center gap-2">
+          {tickers.map((ticker, i) => (
+            <div key={i} className="group relative">
+              <Input
+                placeholder={i === 0 ? 'e.g. AAPL' : i === 1 ? 'e.g. MSFT' : `Ticker ${i + 1}`}
+                value={ticker}
+                onChange={e => updateTicker(i, e.target.value)}
+                className="w-[110px] font-mono text-sm tracking-wide pr-6"
+              />
+              {tickers.length > 1 && (
+                <button
+                    type="button"
+                    onClick={() => removeTicker(i)}
+                    className="absolute right-0.5 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-500 transition-all p-0.5"
+                    aria-label={`Remove ticker ${i + 1}`}
+                    >
+                    <X className="size-3.5" />
+                </button>
+              )}
             </div>
-            <div className="flex flex-col gap-1.5 flex-1 min-w-[120px]">
-                <Label htmlFor="ticker2" className="text-xs font-semibold uppercase text-muted-foreground">2nd Ticker</Label>
-                <Input 
-                    id="ticker2"
-                    placeholder="optional" 
-                    className="bg-background"
-                    value={formData.ticker2}
-                    onChange={(e) => setFormData({ ...formData, ticker2: e.target.value.toUpperCase() })} 
-                />
-            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addTicker}
+            className="flex items-center gap-1 h-9 px-3 rounded-md border border-dashed text-xs text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+          >
+            <Plus className="size-3" />
+            Add
+          </button>
+        </div>
+      </div>
 
-            <div className="flex flex-col gap-1.5">
-                <Label className="text-xs font-semibold uppercase text-muted-foreground">Date Range</Label>
-                <div className="flex items-center gap-2">
-                <Input 
-                    type="date" 
-                    className="w-[150px] bg-background"
-                    value={formData.start}
-                    onChange={(e) => setFormData({ ...formData, start: e.target.value})}
-                />
-                <span className="text-muted-foreground">-</span>
-                <Input 
-                    type="date" 
-                    className="w-[150px] bg-background"
-                    value={formData.end}
-                    onChange={(e) => setFormData({ ...formData, end: e.target.value})}
-                />
-                </div>
-            </div>
+      <div className="px-5 py-4 flex flex-wrap items-end gap-4">
+        <div className="flex flex-col gap-1.5">
+          <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Date Range
+          </Label>
+          <div className="flex items-center gap-2">
+            <Input
+              type="date"
+              className="w-[148px] [&::-webkit-calendar-picker-indicator]:dark:invert"
+              value={formData.start}
+              onChange={set('start')}
+            />
+            <span className="text-muted-foreground text-sm">–</span>
+            <Input
+              type="date"
+              className="w-[148px] [&::-webkit-calendar-picker-indicator]:dark:invert"
+              value={formData.end}
+              onChange={set('end')}
+            />
+          </div>
+        </div>
 
-            <div className="flex flex-col gap-1.5 w-[120px]">
-                <Label htmlFor="entry" className="text-xs font-semibold uppercase text-muted-foreground">Investment</Label>
-                <Input 
-                    id="entry"
-                    type="number"
-                    placeholder="$1000"
-                    className="bg-background"
-                    value={formData.entry}
-                    onChange={(e) => setFormData({ ...formData, entry: e.target.value})}
-                />
-            </div>
+        <div className="flex flex-col gap-1.5 w-[110px]">
+          <Label htmlFor="entry" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Investment
+          </Label>
+          <Input
+            id="entry"
+            type="number"
+            placeholder="$1 000"
+            value={formData.entry}
+            onChange={set('entry')}
+          />
+        </div>
 
-            <div className="flex flex-col gap-1.5 w-[120px]">
-                <Label htmlFor="reinvest_amount" className="text-xs font-semibold uppercase text-muted-foreground">Re-Investment Amount</Label>
-                <Input 
-                    id="reinvest_amount"
-                    type="number"
-                    placeholder="$1000"
-                    className="bg-background"
-                    value={formData.reinvest_amount}
-                    onChange={(e) => setFormData({ ...formData, reinvest_amount: e.target.value})}
-                />
-            </div>
+        <div className="flex flex-col gap-1.5 w-[110px]">
+          <Label htmlFor="reinvest_amount" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            DCA Amount
+          </Label>
+          <Input
+            id="reinvest_amount"
+            type="number"
+            placeholder="$500"
+            value={formData.reinvest_amount}
+            onChange={set('reinvest_amount')}
+          />
+        </div>
 
-            <div className="flex flex-col gap-1.5 w-[120px]">
-                <Label htmlFor="interval" className="text-xs font-semibold uppercase text-muted-foreground">Re-Investment Interval (days)</Label>
-                <Input 
-                    id="interval"
-                    type="number"
-                    placeholder="30"
-                    className="bg-background"
-                    value={formData.reinvest_interval}
-                    onChange={(e) => setFormData({ ...formData, reinvest_interval: e.target.value})}
-                />
-            </div>
+        <div className="flex flex-col gap-1.5 w-[110px]">
+          <Label htmlFor="interval" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Interval (days)
+          </Label>
+          <Input
+            id="interval"
+            type="number"
+            placeholder="30"
+            value={formData.reinvest_interval}
+            onChange={set('reinvest_interval')}
+          />
+        </div>
 
-            <Button type="submit" className="px-6 text-blue-500">
-                <Search className="w-4 h-4 mr-2 text-blue-500" />
-                Analyze
-            </Button>
-        </form>
-    )
+        <div className="flex-1" />
+        <Button
+          type="submit"
+          size="lg"
+          className="gap-2 px-6 font-semibold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 bg-primary hover:bg-primary/85 text-primary-foreground border-0"
+          disabled={tickers.every(t => t.trim() === '')}
+        >
+          <Search className="size-4" />
+          Analyze
+        </Button>
+      </div>
+    </form>
+  )
 }
