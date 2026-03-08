@@ -93,8 +93,7 @@ export default function Dashboard() {
       </motion.div>
 
       <AnimatePresence mode="wait">
-
-        {/* Loading */}
+        
         {stateKey === 'loading' && (
           <motion.div key="loading" {...fadeSlide}>
             <Card className="border-dashed">
@@ -106,7 +105,6 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* Error */}
         {stateKey === 'error' && (
           <motion.div key="error" {...fadeSlide}>
             <Card className="border-destructive/40 bg-destructive/5">
@@ -117,7 +115,6 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* Empty */}
         {stateKey === 'empty' && (
           <motion.div key="empty" {...fadeSlide}>
             <Card className="border-dashed">
@@ -134,11 +131,8 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* Results */}
         {stateKey === 'results' && (
           <motion.div key="results" className="space-y-5" {...fadeSlide}>
-
-            {/* Restored session badge */}
             {restored && (
               <motion.div
                 initial={{ opacity: 0, y: -6 }}

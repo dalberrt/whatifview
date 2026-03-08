@@ -9,8 +9,6 @@ interface StockSearchFormProps {
   onSearch: (tickers: string[], p1: number, p2: number, entry: string, reinvest_amount: string, reinvest_interval: string) => void
 }
 
-// ── Validation ─────────────────────────────────────────────────────────────
-
 interface FormErrors {
   tickers?: string
   start?: string
@@ -59,7 +57,6 @@ function validate(tickers: string[], fd: FormData): FormErrors {
   return errors
 }
 
-// ── Load saved form from localStorage ─────────────────────────────────────
 
 function loadSaved(): { tickers: string[]; fd: FormData } {
   const saved = getForm()
@@ -73,7 +70,6 @@ function loadSaved(): { tickers: string[]; fd: FormData } {
   }
 }
 
-// ── Component ──────────────────────────────────────────────────────────────
 
 export function StockSearchForm({ onSearch }: StockSearchFormProps) {
   const saved = loadSaved()
@@ -123,7 +119,6 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border bg-card shadow-sm overflow-hidden">
 
-      {/* ── Tickers ── */}
       <div className="px-5 pt-5 pb-4 border-b">
         <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 block">
           Tickers
@@ -164,10 +159,7 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
         {err(errors.tickers)}
       </div>
 
-      {/* ── Params row ── */}
       <div className="px-5 py-4 flex flex-wrap items-start gap-4">
-
-        {/* Date range */}
         <div className="flex flex-col gap-1.5">
           <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Date Range
@@ -195,7 +187,6 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
           </div>
         </div>
 
-        {/* Investment */}
         <div className="flex flex-col gap-1.5 w-[110px]">
           <Label htmlFor="entry" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Investment
@@ -213,7 +204,6 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
           {err(errors.entry)}
         </div>
 
-        {/* DCA amount */}
         <div className="flex flex-col gap-1.5 w-[110px]">
           <Label htmlFor="reinvest_amount" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             DCA Amount
@@ -230,7 +220,6 @@ export function StockSearchForm({ onSearch }: StockSearchFormProps) {
           />
         </div>
 
-        {/* DCA interval */}
         <div className="flex flex-col gap-1.5 w-[110px]">
           <Label htmlFor="interval" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Interval (days)

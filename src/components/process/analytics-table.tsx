@@ -9,8 +9,6 @@ import {
   TableHeader,
 } from "@/components/ui/table"
 
-// ── Column definitions ─────────────────────────────────────────────────────
-
 type ColKey = 'ticker' | 'total_invested' | 'shares_held' | 'avg_price' | 'last_price' | 'returns' | 'pct_returns'
 type SortDir = 'asc' | 'desc'
 
@@ -31,7 +29,6 @@ const DEFAULT_COLUMNS: ColDef[] = [
   { key: 'pct_returns',    label: '% Returns',       sortable: true,  align: 'right' },
 ]
 
-// ── Value / format helpers ─────────────────────────────────────────────────
 
 function getValue(key: ColKey, ticker: string, d: Record<string, number>): number | string {
   switch (key) {
@@ -53,7 +50,7 @@ function formatCell(key: ColKey, val: number | string): string {
     case 'shares_held':    return n.toFixed(4)
     case 'avg_price':      return `$${n.toFixed(2)}`
     case 'last_price':     return `$${n.toFixed(2)}`
-    case 'returns':        return `${n >= 0 ? '+' : ''}$${n.toFixed(2)}`
+    case 'returns':        return `${n >= 0 ? '+$' : '-$'}${Math.abs(n).toFixed(2)}`
     case 'pct_returns':    return `${n >= 0 ? '+' : ''}${n.toFixed(2)}%`
   }
 }
@@ -61,8 +58,6 @@ function formatCell(key: ColKey, val: number | string): string {
 function isColoured(key: ColKey) {
   return key === 'returns' || key === 'pct_returns'
 }
-
-// ── Component ──────────────────────────────────────────────────────────────
 
 export function AnalyticsTable({ analyticsData }: { analyticsData?: Record<string, any> }) {
   const [columns, setColumns]       = useState<ColDef[]>(DEFAULT_COLUMNS)
@@ -79,7 +74,6 @@ export function AnalyticsTable({ analyticsData }: { analyticsData?: Record<strin
     )
   }
 
-  // ── Sort ──────────────────────────────────────────────────────────────
 
   const handleSort = (key: ColKey) => {
     if (!columns.find(c => c.key === key)?.sortable) return
@@ -96,7 +90,6 @@ export function AnalyticsTable({ analyticsData }: { analyticsData?: Record<strin
       return sortDir === 'asc' ? va - vb : vb - va
     })
 
-  // ── Drag-to-reorder ───────────────────────────────────────────────────
 
   const onDragStart = (key: ColKey) => { dragSrc.current = key }
 
@@ -125,7 +118,6 @@ export function AnalyticsTable({ analyticsData }: { analyticsData?: Record<strin
     dragSrc.current = null
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────
 
   return (
     <div className="overflow-x-auto">
